@@ -8,7 +8,6 @@ let quotes = [
 
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
-const addQuoteBtn = document.getElementById("addQuoteBtn");
 const categoryFilter = document.getElementById("categoryFilter");
 
 // Populate category dropdown dynamically
@@ -37,28 +36,43 @@ function showRandomQuote() {
 }
 
 // Add new quote dynamically
-function addQuote() {
-  const textInput = document.getElementById("newQuoteText");
-  const categoryInput = document.getElementById("newQuoteCategory");
-
-  const newText = textInput.value.trim();
-  const newCategory = categoryInput.value.trim();
-
-  if (newText && newCategory) {
-    quotes.push({ text: newText, category: newCategory });
-    updateCategoryOptions(); // refresh dropdown
-    textInput.value = "";
-    categoryInput.value = "";
+function addQuote(text, category) {
+  if (text && category) {
+    quotes.push({ text: text.trim(), category: category.trim() });
+    updateCategoryOptions();
+    showRandomQuote();
     alert("New quote added successfully!");
   } else {
     alert("Please fill in both fields.");
   }
 }
 
-// Event listeners
-newQuoteBtn.addEventListener("click", showRandomQuote);
-addQuoteBtn.addEventListener("click", addQuote);
-categoryFilter.addEventListener("change", showRandomQuote);
+// Dynamically create the Add Quote form
+function createAddQuoteForm(containerId) {
+  const container = document.getElementById(containerId);
 
-// Initialize categories on load
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.type = "text";
+  textInput.placeholder = "Enter a new quote";
+
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+
+  const addBtn = document.createElement("button");
+  addBtn.innerText = "Add Quote";
+  addBtn.addEventListener("click", () => addQuote(textInput.value, categoryInput.value));
+
+  // Append elements to container
+  container.appendChild(textInput);
+  container.appendChild(categoryInput);
+  container.appendChild(addBtn);
+}
+
+// Initialize
 updateCategoryOptions();
+createAddQuoteForm("formContainer");
+newQuoteBtn.addEventListener("click", showRandomQuote);
+categoryFilter.addEventListener("change", showRandomQuote);
