@@ -9,7 +9,7 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
 const categoryFilter = document.getElementById("categoryFilter");
-const conflictNotice = document.createElement("div"); // UI notification for conflicts
+const conflictNotice = document.createElement("div"); // Notification UI
 conflictNotice.style.color = "red";
 document.body.insertBefore(conflictNotice, quoteDisplay);
 
@@ -60,7 +60,7 @@ function addQuote(text, category) {
   } else alert("Please fill in both fields.");
 }
 
-// Create add-quote form
+// Dynamically create Add Quote form
 function createAddQuoteForm(containerId) {
   const container = document.getElementById(containerId);
 
@@ -114,30 +114,23 @@ function importFromJsonFile(event) {
   reader.readAsText(event.target.files[0]);
 }
 
-// === Server sync simulation ===
-async function fetchServerQuotes() {
-  // Example: using JSONPlaceholder as a mock API
-  // const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  // const serverQuotes = (await response.json()).slice(0, 5).map((item, i) => ({
-  //   id: item.id,
-  //   text: item.title,
-  //   category: "Server"
-  // }));
+// === Server Sync & Conflict Resolution ===
 
-  // For demonstration, simulate server data
-  const serverQuotes = [
+// Dedicated function to fetch quotes from server
+async function fetchQuotesFromServer() {
+  // Example: simulate server fetch
+  // Replace with fetch("https://jsonplaceholder.typicode.com/posts") for real API
+  return [
     { id: 101, text: "Server quote 1", category: "Server" },
     { id: 102, text: "Server quote 2", category: "Server" }
   ];
-
-  return serverQuotes;
 }
 
-// Merge local and server quotes with conflict resolution
+// Sync local quotes with server
 async function syncWithServer() {
-  const serverQuotes = await fetchServerQuotes();
-
+  const serverQuotes = await fetchQuotesFromServer();
   let conflicts = 0;
+
   serverQuotes.forEach(sq => {
     const local = quotes.find(lq => lq.id === sq.id);
     if (local) {
@@ -173,5 +166,5 @@ if (lastQuote) {
   quoteDisplay.textContent = `"${lastQuote.text}" — ${lastQuote.category}`;
 }
 
-// Start periodic server sync every 10 seconds
+// Periodically sync with server
 setInterval(syncWithServer, 10000);
