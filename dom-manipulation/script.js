@@ -22,19 +22,21 @@ function populateCategories() {
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
-    option.textContent = cat; // <-- changed to textContent
+    option.textContent = cat;
     categoryFilter.appendChild(option);
   });
+}
+
+// Filter quotes by selected category
+function filterQuote(category) {
+  if (category === "all") return quotes;
+  return quotes.filter(q => q.category === category);
 }
 
 // Show random quote
 function showRandomQuote() {
   const selectedCategory = categoryFilter.value;
-  let filteredQuotes = quotes;
-
-  if (selectedCategory !== "all") {
-    filteredQuotes = quotes.filter(q => q.category === selectedCategory);
-  }
+  const filteredQuotes = filterQuote(selectedCategory);
 
   if (filteredQuotes.length === 0) {
     quoteDisplay.textContent = "No quotes available in this category!";
@@ -43,7 +45,7 @@ function showRandomQuote() {
 
   const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
   const quote = filteredQuotes[randomIndex];
-  quoteDisplay.textContent = `"${quote.text}" — ${quote.category}`; // <-- changed to textContent
+  quoteDisplay.textContent = `"${quote.text}" — ${quote.category}`;
 
   // Optional: store last viewed quote in sessionStorage
   sessionStorage.setItem("lastQuote", JSON.stringify(quote));
@@ -77,7 +79,7 @@ function createAddQuoteForm(containerId) {
   categoryInput.placeholder = "Enter quote category";
 
   const addBtn = document.createElement("button");
-  addBtn.textContent = "Add Quote"; // <-- changed to textContent
+  addBtn.textContent = "Add Quote";
   addBtn.addEventListener("click", () => addQuote(textInput.value, categoryInput.value));
 
   container.appendChild(textInput);
@@ -129,5 +131,5 @@ document.getElementById("importFile").addEventListener("change", importFromJsonF
 // Restore last viewed quote from sessionStorage
 const lastQuote = JSON.parse(sessionStorage.getItem("lastQuote"));
 if (lastQuote) {
-  quoteDisplay.textContent = `"${lastQuote.text}" — ${lastQuote.category}`; // <-- changed to textContent
+  quoteDisplay.textContent = `"${lastQuote.text}" — ${lastQuote.category}`;
 }
