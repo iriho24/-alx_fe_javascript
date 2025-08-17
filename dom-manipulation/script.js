@@ -1,4 +1,4 @@
-// Initial quotes data
+// Load quotes from localStorage or default
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
   { text: "Don't let yesterday take up too much of today.", category: "Inspiration" },
@@ -22,7 +22,7 @@ function populateCategories() {
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
-    option.innerText = cat;
+    option.textContent = cat; // <-- changed to textContent
     categoryFilter.appendChild(option);
   });
 }
@@ -37,13 +37,13 @@ function showRandomQuote() {
   }
 
   if (filteredQuotes.length === 0) {
-    quoteDisplay.innerText = "No quotes available in this category!";
+    quoteDisplay.textContent = "No quotes available in this category!";
     return;
   }
 
   const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
   const quote = filteredQuotes[randomIndex];
-  quoteDisplay.innerText = `"${quote.text}" \n— ${quote.category}`;
+  quoteDisplay.textContent = `"${quote.text}" — ${quote.category}`; // <-- changed to textContent
 
   // Optional: store last viewed quote in sessionStorage
   sessionStorage.setItem("lastQuote", JSON.stringify(quote));
@@ -77,7 +77,7 @@ function createAddQuoteForm(containerId) {
   categoryInput.placeholder = "Enter quote category";
 
   const addBtn = document.createElement("button");
-  addBtn.innerText = "Add Quote";
+  addBtn.textContent = "Add Quote"; // <-- changed to textContent
   addBtn.addEventListener("click", () => addQuote(textInput.value, categoryInput.value));
 
   container.appendChild(textInput);
@@ -129,5 +129,5 @@ document.getElementById("importFile").addEventListener("change", importFromJsonF
 // Restore last viewed quote from sessionStorage
 const lastQuote = JSON.parse(sessionStorage.getItem("lastQuote"));
 if (lastQuote) {
-  quoteDisplay.innerText = `"${lastQuote.text}" \n— ${lastQuote.category}`;
+  quoteDisplay.textContent = `"${lastQuote.text}" — ${lastQuote.category}`; // <-- changed to textContent
 }
